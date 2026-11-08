@@ -1,0 +1,42 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "markolis-mcp"
+version = "1.0.0"
+description = "Official Model Context Protocol (MCP) server bridge for Markolis quantitative market telemetry."
+readme = "README.md"
+authors = [{ name = "Markolis Quant Lab", email = "admin@markolis.com" }]
+license = { text = "Apache-2.0" }
+requires-python = ">=3.9"
+keywords = [
+    "mcp",
+    "model-context-protocol",
+    "quantitative-finance",
+    "order-book",
+    "auction-market-theory",
+    "market-telemetry",
+    "claude",
+    "cursor"
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Financial and Insurance Industry",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Office/Business :: Financial :: Investment",
+]
+
+[project.urls]
+Homepage = "https://www.markolis.com"
+Documentation = "https://www.markolis.com/docs"
+Repository = "https://github.com/markolis-quant/markolis-mcp"
+
+[project.scripts]
+markolis-mcp = "markolis_mcp.client:main"

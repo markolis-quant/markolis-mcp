@@ -1,0 +1,31 @@
+{
+  "name": "markolis-mcp",
+  "version": "1.0.0",
+  "description": "Official Model Context Protocol (MCP) server bridge for Markolis quantitative market telemetry.",
+  "main": "bin/markolis-mcp.js",
+  "bin": {
+    "markolis-mcp": "./bin/markolis-mcp.js"
+  },
+  "scripts": {
+    "start": "node ./bin/markolis-mcp.js"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "claude",
+    "cursor",
+    "finance",
+    "trading",
+    "orderbook"
+  ],
+  "author": "Markolis Quant Lab <admin@markolis.com>",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/markolis-quant/markolis-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/markolis-quant/markolis-mcp/issues"
+  },
+  "homepage": "https://www.markolis.com"
+}

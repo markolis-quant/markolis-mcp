@@ -1,0 +1,37 @@
+name: MCP Client CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    name: Validate Manifest & Bridge
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Validate server.json syntax
+        run: |
+          python3 -c "import json; data = json.load(open('server.json')); assert data['name'] == 'io.github.markolis-quant/markolis-mcp'; print('server.json is valid!')"
+
+      - name: Test Node bridge syntax
+        run: |
+          node -c bin/markolis-mcp.js
+
+      - name: Test Python bridge syntax
+        run: |
+          python3 -m py_compile markolis_mcp/client.py

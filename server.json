@@ -1,0 +1,25 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schema/2026-01-18/server.json",
+  "name": "io.github.markolis-quant/markolis-mcp",
+  "title": "Markolis Market Intelligence",
+  "description": "Institutional quantitative market intelligence and multi-asset auction profile telemetry for AI agents.",
+  "version": "1.0.0",
+  "license": "Apache-2.0",
+  "repository": {
+    "url": "https://github.com/markolis-quant/markolis-mcp",
+    "source": "github"
+  },
+  "websiteUrl": "https://www.markolis.com",
+  "endpoints": [
+    {
+      "type": "streamable-http",
+      "url": "https://www.markolis.com/api/mcp"
+    }
+  ],
+  "capabilities": {
+    "tools": true,
+    "resources": true,
+    "prompts": false,
+    "logging": false
+  }
+}
