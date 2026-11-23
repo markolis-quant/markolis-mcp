@@ -24,7 +24,17 @@ def get_ssl_context() -> ssl.SSLContext:
         import certifi
         return ssl.create_default_context(cafile=certifi.where())
     except ImportError:
-        return ssl.create_default_context()
+        pass
+
+    for ca_path in (
+        "/etc/ssl/cert.pem",
+        "/etc/ssl/certs/ca-certificates.crt",
+        "/etc/pki/tls/certs/ca-bundle.crt",
+    ):
+        if os.path.exists(ca_path):
+            return ssl.create_default_context(cafile=ca_path)
+
+    return ssl.create_default_context()
 
 
 def _emit_jsonrpc_error(req_id: Any, code: int, message: str) -> None:
