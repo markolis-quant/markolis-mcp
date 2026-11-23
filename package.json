@@ -6,6 +6,12 @@
   "bin": {
     "markolis-mcp": "./bin/markolis-mcp.js"
   },
+  "files": [
+    "bin/markolis-mcp.js",
+    "README.md",
+    "LICENSE",
+    "server.json"
+  ],
   "scripts": {
     "start": "node ./bin/markolis-mcp.js"
   },
