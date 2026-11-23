@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "markolis-mcp"
-version = "1.0.0"
+version = "2.10.0"
 description = "Official Model Context Protocol (MCP) server bridge for Markolis quantitative market telemetry."
 readme = "README.md"
 authors = [{ name = "Markolis Quant Lab", email = "admin@markolis.com" }]
@@ -35,7 +35,7 @@ classifiers = [
 
 [project.urls]
 Homepage = "https://www.markolis.com"
-Documentation = "https://www.markolis.com/docs"
+Documentation = "https://www.markolis.com/guide"
 Repository = "https://github.com/markolis-quant/markolis-mcp"
 
 [project.scripts]

@@ -1,6 +1,6 @@
 {
   "name": "markolis-mcp",
-  "version": "1.0.0",
+  "version": "2.10.0",
   "description": "Official Model Context Protocol (MCP) server bridge for Markolis quantitative market telemetry.",
   "main": "bin/markolis-mcp.js",
   "bin": {

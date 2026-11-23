@@ -5,41 +5,89 @@
  * Proxies standard I/O JSON-RPC to the hosted streaming Markolis MCP endpoint.
  */
 
+const http = require('http');
 const https = require('https');
 const readline = require('readline');
 
 const DEFAULT_ENDPOINT = 'https://www.markolis.com/api/mcp';
-const endpointUrl = new URL(process.env.MARKOLIS_ENDPOINT || DEFAULT_ENDPOINT);
-const apiKey = process.env.MARKOLIS_API_KEY || '';
+const REQUEST_TIMEOUT_MS = 30000;
+const endpointUrl = new URL(
+  process.env.MARKOLIS_ENDPOINT || process.env.MARKOLIS_MCP_URL || DEFAULT_ENDPOINT
+);
+const apiKey =
+  process.env.MARKOLIS_AGENT_KEY ||
+  process.env.MARKOLIS_AGENT_TOKEN ||
+  process.env.MARKOLIS_API_KEY ||
+  '';
+const transport = endpointUrl.protocol === 'http:' ? http : https;
+
+function emitJsonRpcError(id, code, message) {
+  const errObj = {
+    jsonrpc: '2.0',
+    error: { code, message },
+    id: id === undefined ? null : id,
+  };
+  process.stdout.write(JSON.stringify(errObj) + '\n');
+}
+
+function forwardSsePayloads(rawBody) {
+  const blocks = rawBody.split(/\r?\n\r?\n/);
+  for (const block of blocks) {
+    const dataLines = block
+      .split(/\r?\n/)
+      .filter((l) => l.startsWith('data:'))
+      .map((l) => l.slice(5).trimStart())
+      .filter(Boolean);
+    if (dataLines.length === 0) continue;
+    const joined = dataLines.join('\n').trim();
+    if (!joined || joined === '[DONE]') continue;
+    process.stdout.write(joined + '\n');
+  }
+}
 
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
-  terminal: false
+  terminal: false,
 });
 
 rl.on('line', (line) => {
   const trimmed = line.trim();
   if (!trimmed) return;
 
+  let isNotification = false;
+  let requestId = null;
+  try {
+    const parsed = JSON.parse(trimmed);
+    if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+      isNotification = !('id' in parsed) || parsed.id === undefined;
+      requestId = 'id' in parsed ? parsed.id : null;
+    }
+  } catch {
+    // Let upstream return a standard JSON-RPC parse error.
+  }
+
   const payload = Buffer.from(trimmed, 'utf-8');
   const headers = {
     'Content-Type': 'application/json',
+    'Accept': 'application/json, text/event-stream',
+    'MCP-Protocol-Version': '2025-03-26',
     'Content-Length': payload.length,
-    'User-Agent': 'markolis-mcp-node/1.0.0'
+    'User-Agent': 'markolis-mcp-node/2.10.0',
   };
 
   if (apiKey) {
     headers['Authorization'] = `Bearer ${apiKey}`;
   }
 
-  const req = https.request(
+  const defaultPort = endpointUrl.protocol === 'http:' ? 80 : 443;
+  const req = transport.request(
     {
       hostname: endpointUrl.hostname,
-      port: endpointUrl.port || 443,
-      path: endpointUrl.pathname,
+      port: endpointUrl.port || defaultPort,
+      path: `${endpointUrl.pathname}${endpointUrl.search}`,
       method: 'POST',
-      headers: headers
+      headers,
     },
     (res) => {
       let data = '';
@@ -47,21 +95,45 @@ rl.on('line', (line) => {
         data += chunk;
       });
       res.on('end', () => {
-        process.stdout.write(data + '\n');
+        const body = data.trim();
+        const statusCode = res.statusCode || 200;
+        const contentType = String(res.headers['content-type'] || '').toLowerCase();
+
+        if (isNotification || statusCode === 202 || statusCode === 204 || !body) {
+          return;
+        }
+
+        if (statusCode >= 400) {
+          try {
+            const parsedErr = JSON.parse(body);
+            if (parsedErr && parsedErr.jsonrpc === '2.0') {
+              process.stdout.write(JSON.stringify(parsedErr) + '\n');
+              return;
+            }
+          } catch {
+            // Fall through to synthesized JSON-RPC error.
+          }
+          emitJsonRpcError(requestId, -32000, `Markolis upstream HTTP ${statusCode}: ${body}`);
+          return;
+        }
+
+        if (contentType.includes('text/event-stream')) {
+          forwardSsePayloads(data);
+          return;
+        }
+
+        process.stdout.write(body + '\n');
       });
     }
   );
 
+  req.setTimeout(REQUEST_TIMEOUT_MS, () => {
+    req.destroy(new Error('Request timed out'));
+  });
+
   req.on('error', (err) => {
-    const errObj = {
-      jsonrpc: '2.0',
-      error: {
-        code: -32603,
-        message: `Markolis proxy error: ${err.message}`
-      },
-      id: null
-    };
-    process.stdout.write(JSON.stringify(errObj) + '\n');
+    if (isNotification) return;
+    emitJsonRpcError(requestId, -32603, `Markolis proxy error: ${err.message}`);
   });
 
   req.write(payload);

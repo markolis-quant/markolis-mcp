@@ -2,8 +2,8 @@
   "$schema": "https://static.modelcontextprotocol.io/schema/2026-01-18/server.json",
   "name": "io.github.markolis-quant/markolis-mcp",
   "title": "Markolis Market Intelligence",
-  "description": "Institutional quantitative market intelligence and multi-asset auction profile telemetry for AI agents.",
-  "version": "1.0.0",
+  "description": "Empirical market telemetry, 100-bin AMT, trapped crowd, Yang-Zhang vol & macro shock radar.",
+  "version": "2.10.0",
   "license": "Apache-2.0",
   "repository": {
     "url": "https://github.com/markolis-quant/markolis-mcp",
@@ -14,12 +14,16 @@
     {
       "type": "streamable-http",
       "url": "https://www.markolis.com/api/mcp"
+    },
+    {
+      "type": "sse",
+      "url": "https://www.markolis.com/api/mcp/sse"
     }
   ],
   "capabilities": {
     "tools": true,
     "resources": true,
-    "prompts": false,
+    "prompts": true,
     "logging": false
   }
 }
