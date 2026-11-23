@@ -4,13 +4,15 @@
 
 ### Institutional Quantitative Market Intelligence & Micro-Apps for AI Agents
 
+[![npm](https://img.shields.io/npm/v/markolis-mcp?style=flat-square&color=cb3837&logo=npm)](https://www.npmjs.com/package/markolis-mcp)
+[![PyPI](https://img.shields.io/pypi/v/markolis-mcp?style=flat-square&color=3775a9&logo=pypi)](https://pypi.org/project/markolis-mcp/)
 [![Official MCP Registry](https://img.shields.io/badge/MCP%20Registry-io.github.markolis--quant%2Fmarkolis--mcp-blue?style=flat-square&logo=anthropic)](https://registry.modelcontextprotocol.io)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-green.svg?style=flat-square)](https://opensource.org/licenses/Apache-2.0)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg?style=flat-square&logo=python)](https://www.python.org/)
 [![Node 18+](https://img.shields.io/badge/node-18+-brightgreen.svg?style=flat-square&logo=node.js)](https://nodejs.org/)
 [![Status](https://img.shields.io/badge/Service-Operational-emerald?style=flat-square)](https://www.markolis.com)
 
-**[Terminal & Web App](https://www.markolis.com)** · **[Catalog & Tiers](https://www.markolis.com/catalog)** · **[MCP Setup & Keys](https://www.markolis.com/mcp)** · **[Guide](https://www.markolis.com/guide)**
+**[Terminal & Web App](https://www.markolis.com)** · **[Catalog & Tiers](https://www.markolis.com/catalog)** · **[MCP Setup & Keys](https://www.markolis.com/mcp)** · **[npm](https://www.npmjs.com/package/markolis-mcp)** · **[PyPI](https://pypi.org/project/markolis-mcp/)**
 
 </div>
 
